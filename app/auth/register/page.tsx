@@ -20,14 +20,28 @@ export default function RegisterPage() {
   const sendOtp = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true); setError('')
-    const res = await fetch('/api/auth/send-otp', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone }),
-    })
-    const data = await res.json()
-    if (!res.ok) { setError(data.error); setLoading(false); return }
-    setStep('sms')
-    setLoading(false)
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 15000)
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone }),
+        signal: controller.signal,
+      })
+      clearTimeout(timeout)
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || 'Ошибка отправки'); setLoading(false); return }
+      setStep('sms')
+    } catch (err: any) {
+      if (err?.name === 'AbortError') {
+        setError('Превышено время ожидания. Попробуйте снова.')
+      } else {
+        setError('Ошибка соединения. Проверьте интернет.')
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   const confirmRegister = async (e: React.FormEvent) => {
