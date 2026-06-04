@@ -8,31 +8,42 @@ const Schema = z.object({
 })
 
 export async function POST(req: NextRequest) {
-  const body = await req.json()
-  const parsed = Schema.safeParse(body)
-  if (!parsed.success)
-    return NextResponse.json({ error: parsed.error.errors[0].message }, { status: 400 })
+  try {
+    const body = await req.json()
+    const parsed = Schema.safeParse(body)
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.errors[0].message }, { status: 400 })
 
-  const { phone } = parsed.data
+    const { phone } = parsed.data
 
-  const existing = await prisma.user.findUnique({ where: { phone } })
-  if (existing)
-    return NextResponse.json({ error: 'Этот номер уже зарегистрирован' }, { status: 400 })
+    const existing = await prisma.user.findUnique({ where: { phone } })
+    if (existing)
+      return NextResponse.json({ error: 'Этот номер уже зарегистрирован' }, { status: 400 })
 
-  // Инвалидируем старые коды
-  await prisma.otpCode.updateMany({
-    where: { phone, purpose: 'REGISTER', used: false },
-    data: { used: true },
-  })
+    // Инвалидируем старые коды
+    await prisma.otpCode.updateMany({
+      where: { phone, purpose: 'REGISTER', used: false },
+      data: { used: true },
+    })
 
-  const code = generateOtp()
-  await prisma.otpCode.create({
-    data: { phone, code, purpose: 'REGISTER', expiresAt: otpExpiresAt() },
-  })
+    const code = generateOtp()
+    await prisma.otpCode.create({
+      data: { phone, code, purpose: 'REGISTER', expiresAt: otpExpiresAt() },
+    })
 
-  const sent = await sendSms(phone, `QazTestPrep: ваш код подтверждения — ${code}. Действителен 5 минут.`)
-  if (!sent)
-    return NextResponse.json({ error: 'Ошибка отправки SMS. Попробуйте позже.' }, { status: 500 })
+    const sent = await sendSms(phone, `QazTestPrep: код подтверждения — ${code}. Действителен 5 минут.`)
 
-  return NextResponse.json({ message: 'Код отправлен' })
+    if (!sent) {
+      console.error('[send-otp] SMS failed for', phone)
+      return NextResponse.json(
+        { error: 'Не удалось отправить SMS. Проверьте номер и попробуйте снова.' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ message: 'Код отправлен' })
+  } catch (err) {
+    console.error('[send-otp] Unexpected error:', err)
+    return NextResponse.json({ error: 'Ошибка сервера. Попробуйте позже.' }, { status: 500 })
+  }
 }
