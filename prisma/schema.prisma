@@ -8,15 +8,19 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  username    String   @unique
+  phone       String   @unique
+  password    String
+  role        Role     @default(STUDENT)
+  isBlocked   Boolean  @default(false)
+  isApproved  Boolean  @default(false) // для учителей
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  sessions  Session[]
+  sessions    Session[]
+  otpCodes    OtpCode[]
 }
 
 model Session {
@@ -31,7 +35,26 @@ model Session {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model OtpCode {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  purpose   OtpPurpose
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 enum Role {
-  USER
+  STUDENT
+  TEACHER
   ADMIN
+}
+
+enum OtpPurpose {
+  REGISTER
+  RESET_PASSWORD
 }
