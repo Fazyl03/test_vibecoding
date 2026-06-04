@@ -12,11 +12,15 @@ export async function sendSms(phone: string, message: string): Promise<boolean> 
   url.searchParams.set('charset', 'utf-8')
 
   try {
-    const res = await fetch(url.toString())
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 8000)
+    const res = await fetch(url.toString(), { signal: controller.signal })
+    clearTimeout(timeout)
     const data = await res.json()
-    // SMSC returns { error_code: ... } on error
+    console.log('[SMSC response]', data)
     return !data.error_code
-  } catch {
+  } catch (err) {
+    console.error('[SMSC error]', err)
     return false
   }
 }
