@@ -258,8 +258,8 @@ export default function HomePage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px' }}>
             {courses.map((c, i) => (
-              <div key={i} style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid #E2E8F0', cursor: 'pointer' }}>
-                <div style={{ aspectRatio: '16/9', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', fontSize: '44px', background: c.bg }}>
+              <div key={i} style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid #E2E8F0', cursor: 'pointer', transition: 'all .2s' }}>
+                <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', fontSize: '72px', background: c.bg }}>
                   {c.emoji}
                   <span style={{ position: 'absolute', top: '12px', right: '12px', background: '#fff', fontSize: '12px', fontWeight: 700, padding: '4px 10px', borderRadius: '6px', color: c.tagColor }}>{c.tag}</span>
                 </div>
