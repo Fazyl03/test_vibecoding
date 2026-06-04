@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { sendSms, generateOtp, otpExpiresAt } from '@/lib/sms'
+import { sendOtpEmail, generateOtp, otpExpiresAt } from '@/lib/email'
 import { z } from 'zod'
 
 const Schema = z.object({
-  phone: z.string().regex(/^\+7\d{10}$/, 'Формат: +77XXXXXXXXX'),
+  email: z.string().email('Неверный формат email'),
 })
 
 export async function POST(req: NextRequest) {
@@ -14,32 +14,32 @@ export async function POST(req: NextRequest) {
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.errors[0].message }, { status: 400 })
 
-    const { phone } = parsed.data
+    const { email } = parsed.data
 
-    const existing = await prisma.user.findUnique({ where: { phone } })
+    const existing = await prisma.user.findUnique({ where: { email } })
     if (existing)
-      return NextResponse.json({ error: 'Этот номер уже зарегистрирован' }, { status: 400 })
+      return NextResponse.json({ error: 'Этот email уже зарегистрирован' }, { status: 400 })
 
     await prisma.otpCode.updateMany({
-      where: { phone, purpose: 'REGISTER', used: false },
+      where: { email, purpose: 'REGISTER', used: false },
       data: { used: true },
     })
 
     const code = generateOtp()
     await prisma.otpCode.create({
-      data: { phone, code, purpose: 'REGISTER', expiresAt: otpExpiresAt() },
+      data: { email, code, purpose: 'REGISTER', expiresAt: otpExpiresAt() },
     })
 
-    const sent = await sendSms(phone, `QazTestPrep: код подтверждения — ${code}. Действителен 5 минут.`)
+    const sent = await sendOtpEmail(email, code, 'register')
 
     if (!sent) {
-      console.warn('[send-otp] SMS failed, dev mode: returning code in response')
+      console.warn('[send-otp] Email failed, dev mode: returning code')
       return NextResponse.json({ message: 'dev', devCode: code })
     }
 
-    return NextResponse.json({ message: 'Код отправлен' })
+    return NextResponse.json({ message: 'Код отправлен на email' })
   } catch (err) {
-    console.error('[send-otp] Unexpected error:', err)
+    console.error('[send-otp] Error:', err)
     return NextResponse.json({ error: 'Ошибка сервера. Попробуйте позже.' }, { status: 500 })
   }
 }
