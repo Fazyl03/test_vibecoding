@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Navbar from '@/components/layout/Navbar'
 
 const stats = [
   { value: '50 000+', label: 'Тестовых вопросов' },
@@ -27,46 +28,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#FAFAF7]">
 
-      {/* NAVBAR */}
-      <nav className="sticky top-0 z-50 bg-[#FAFAF7]/90 backdrop-blur-md border-b border-[#E8E8E4]">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-[#2563EB] rounded-lg flex items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 12L8 4L13 12H3Z" fill="white" />
-              </svg>
-            </div>
-            <span className="font-bold text-[15px] tracking-tight">
-              Qaz<span className="text-[#2563EB]">TestPrep</span>
-            </span>
-          </div>
-
-          <ul className="hidden md:flex items-center gap-8 list-none">
-            {['Предметы', 'Как работает', 'Цены'].map((item) => (
-              <li key={item}>
-                <a href={`#${item.toLowerCase()}`} className="text-sm font-medium text-[#4A4A4A] hover:text-[#1A1A1A] transition-colors">
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/auth/login"
-              className="text-sm font-medium text-[#4A4A4A] hover:text-[#1A1A1A] transition-colors px-4 py-2"
-            >
-              Войти
-            </Link>
-            <Link
-              href="/auth/register"
-              className="text-sm font-semibold bg-[#2563EB] text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors"
-            >
-              Начать бесплатно
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* HERO */}
       <section className="max-w-6xl mx-auto px-6 pt-24 pb-20">
