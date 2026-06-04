@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [code, setCode]         = useState('')
   const [error, setError]       = useState('')
   const [loading, setLoading]   = useState(false)
+  const [devCode, setDevCode]   = useState('')
 
   const sendOtp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,7 +32,8 @@ export default function RegisterPage() {
       })
       clearTimeout(timeout)
       const data = await res.json()
-      if (!res.ok) { setError(data.error || 'Ошибка отправки'); setLoading(false); return }
+      if (!res.ok) { setError(data.error || 'Ошибка отправки'); return }
+      if (data.devCode) setDevCode(data.devCode)
       setStep('sms')
     } catch (err: any) {
       if (err?.name === 'AbortError') {
@@ -47,13 +49,20 @@ export default function RegisterPage() {
   const confirmRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true); setError('')
-    const res = await fetch('/api/auth/register', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, username, phone, password, role, code }),
-    })
-    const data = await res.json()
-    if (!res.ok) { setError(data.error); setLoading(false); return }
-    router.push('/auth/login?registered=true')
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, username, phone, password, role, code }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error); return }
+      router.push('/auth/login?registered=true')
+    } catch {
+      setError('Ошибка соединения.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -75,11 +84,12 @@ export default function RegisterPage() {
         </div>
 
         <div className="bg-white border border-[#E8E8E4] rounded-2xl p-6">
-          {error && <div className="bg-red-50 border border-red-100 text-red-600 text-sm px-4 py-3 rounded-xl mb-4">{error}</div>}
+          {error && (
+            <div className="bg-red-50 border border-red-100 text-red-600 text-sm px-4 py-3 rounded-xl mb-4">{error}</div>
+          )}
 
           {step === 'form' ? (
             <form onSubmit={sendOtp} className="space-y-4">
-              {/* Роль */}
               <div className="grid grid-cols-2 gap-2">
                 {(['STUDENT', 'TEACHER'] as const).map(r => (
                   <button type="button" key={r} onClick={() => setRole(r)}
@@ -115,9 +125,17 @@ export default function RegisterPage() {
             </form>
           ) : (
             <form onSubmit={confirmRegister} className="space-y-4">
+              {/* DEV MODE: показываем код если SMS не ушла */}
+              {devCode && (
+                <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm px-4 py-3 rounded-xl text-center">
+                  <p className="text-xs font-medium mb-1">⚠️ Dev режим — SMS не отправлена</p>
+                  <p className="text-xl font-bold tracking-widest">{devCode}</p>
+                </div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Код из SMS</label>
-                <input type="text" value={code} onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0,6))}
+                <input type="text" value={code}
+                  onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   placeholder="000000" maxLength={6} required
                   className="w-full border border-[#E8E8E4] rounded-xl px-4 py-3 text-sm text-center tracking-[0.4em] text-lg font-bold focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#EEF3FF] transition"/>
               </div>
@@ -125,13 +143,14 @@ export default function RegisterPage() {
                 className="w-full bg-[#2563EB] text-white font-semibold py-3 rounded-xl text-sm hover:bg-blue-700 transition disabled:opacity-60">
                 {loading ? 'Создаём аккаунт...' : 'Подтвердить'}
               </button>
-              <button type="button" onClick={() => { setStep('form'); setCode(''); setError('') }}
+              <button type="button" onClick={() => { setStep('form'); setCode(''); setError(''); setDevCode('') }}
                 className="w-full text-sm text-[#9A9A9A] hover:text-[#1A1A1A] transition py-1">
                 ← Изменить данные
               </button>
             </form>
           )}
         </div>
+
         <p className="text-center text-sm text-[#9A9A9A] mt-4">
           Уже есть аккаунт?{' '}
           <Link href="/auth/login" className="text-[#2563EB] font-medium hover:underline">Войти</Link>
