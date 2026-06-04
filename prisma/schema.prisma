@@ -12,11 +12,11 @@ model User {
   id          String   @id @default(cuid())
   name        String
   username    String   @unique
-  phone       String   @unique
+  email       String   @unique
   password    String
   role        Role     @default(STUDENT)
   isBlocked   Boolean  @default(false)
-  isApproved  Boolean  @default(false) // для учителей
+  isApproved  Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -37,16 +37,16 @@ model Session {
 }
 
 model OtpCode {
-  id        String   @id @default(cuid())
-  phone     String
+  id        String     @id @default(cuid())
+  email     String
   code      String
   purpose   OtpPurpose
-  used      Boolean  @default(false)
+  used      Boolean    @default(false)
   expiresAt DateTime
-  createdAt DateTime @default(now())
+  createdAt DateTime   @default(now())
 
   userId    String?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
