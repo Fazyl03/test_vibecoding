@@ -9,23 +9,14 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Onest', 'sans-serif'],
-        serif: ['Instrument Serif', 'serif'],
+        serif: ['"Instrument Serif"', 'serif'],
       },
       colors: {
-        cream: '#FAFAF7',
-        ink: '#1A1A1A',
-        'ink-soft': '#4A4A4A',
-        'ink-muted': '#9A9A9A',
-        blue: {
-          DEFAULT: '#2563EB',
-          soft: '#EEF3FF',
-          mid: '#BFCFFF',
-        },
-        border: '#E8E8E4',
-      },
-      borderRadius: {
-        '2xl': '16px',
-        'xl': '12px',
+        cream: '#F7F6F2',
+        surface: '#FDFCF9',
+        ink: { DEFAULT: '#111111', soft: '#444444', muted: '#999999' },
+        blue: { DEFAULT: '#2563EB', deep: '#1A44C2', soft: '#EEF3FF', mid: '#BFCFFF' },
+        border: '#E2E0D8',
       },
     },
   },
