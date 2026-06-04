@@ -3,39 +3,53 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-type Step = 'phone' | 'code'
+type Step = 'email' | 'code'
 
 export default function ResetPasswordPage() {
   const router = useRouter()
-  const [step, setStep]             = useState<Step>('phone')
-  const [phone, setPhone]           = useState('')
-  const [code, setCode]             = useState('')
+  const [step, setStep]               = useState<Step>('email')
+  const [email, setEmail]             = useState('')
+  const [code, setCode]               = useState('')
   const [newPassword, setNewPassword] = useState('')
-  const [error, setError]           = useState('')
-  const [loading, setLoading]       = useState(false)
+  const [error, setError]             = useState('')
+  const [loading, setLoading]         = useState(false)
+  const [devCode, setDevCode]         = useState('')
 
   const sendOtp = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true); setError('')
-    const res = await fetch('/api/auth/reset-password/send', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone }),
-    })
-    const data = await res.json()
-    if (!res.ok) { setError(data.error); setLoading(false); return }
-    setStep('code'); setLoading(false)
+    try {
+      const res = await fetch('/api/auth/reset-password/send', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error); return }
+      if (data.devCode) setDevCode(data.devCode)
+      setStep('code')
+    } catch {
+      setError('Ошибка соединения.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const confirmReset = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true); setError('')
-    const res = await fetch('/api/auth/reset-password/confirm', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, code, newPassword }),
-    })
-    const data = await res.json()
-    if (!res.ok) { setError(data.error); setLoading(false); return }
-    router.push('/auth/login?reset=true')
+    try {
+      const res = await fetch('/api/auth/reset-password/confirm', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, newPassword }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error); return }
+      router.push('/auth/login?reset=true')
+    } catch {
+      setError('Ошибка соединения.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -50,18 +64,18 @@ export default function ResetPasswordPage() {
           </Link>
           <h1 className="text-2xl font-bold text-[#1A1A1A] tracking-tight">Сброс пароля</h1>
           <p className="text-sm text-[#9A9A9A] mt-1">
-            {step === 'phone' ? 'Введи номер телефона' : `Код отправлен на ${phone}`}
+            {step === 'email' ? 'Введи свой email' : `Код отправлен на ${email}`}
           </p>
         </div>
 
         <div className="bg-white border border-[#E8E8E4] rounded-2xl p-6">
           {error && <div className="bg-red-50 border border-red-100 text-red-600 text-sm px-4 py-3 rounded-xl mb-4">{error}</div>}
 
-          {step === 'phone' ? (
+          {step === 'email' ? (
             <form onSubmit={sendOtp} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Номер телефона</label>
-                <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+77XXXXXXXXX" required
+                <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Email</label>
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required
                   className="w-full border border-[#E8E8E4] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#EEF3FF] transition"/>
               </div>
               <button type="submit" disabled={loading}
@@ -71,11 +85,17 @@ export default function ResetPasswordPage() {
             </form>
           ) : (
             <form onSubmit={confirmReset} className="space-y-4">
+              {devCode && (
+                <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm px-4 py-3 rounded-xl text-center">
+                  <p className="text-xs font-medium mb-1">⚠️ Dev — письмо не ушло</p>
+                  <p className="text-2xl font-bold tracking-widest">{devCode}</p>
+                </div>
+              )}
               <div>
-                <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Код из SMS</label>
-                <input type="text" value={code} onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0,6))}
+                <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Код из письма</label>
+                <input type="text" value={code} onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   placeholder="000000" maxLength={6} required
-                  className="w-full border border-[#E8E8E4] rounded-xl px-4 py-3 text-sm text-center tracking-[0.4em] text-lg font-bold focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#EEF3FF] transition"/>
+                  className="w-full border border-[#E8E8E4] rounded-xl px-4 py-3 text-sm text-center tracking-[0.4em] text-xl font-bold focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#EEF3FF] transition"/>
               </div>
               <div>
                 <label className="block text-sm font-medium text-[#1A1A1A] mb-1.5">Новый пароль</label>
