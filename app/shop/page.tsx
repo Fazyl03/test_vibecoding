@@ -11,41 +11,41 @@ const products = [
 ]
 
 const badgeColor: Record<string, string> = {
-  'Хит':     'bg-red-50 text-red-600',
-  'Выгодно': 'bg-green-50 text-green-700',
-  'Новинка': 'bg-purple-50 text-purple-700',
+  'Хит':     'bg-red-50 text-red-600 border-red-100',
+  'Выгодно': 'bg-emerald-50 text-emerald-700 border-emerald-100',
+  'Новинка': 'bg-purple-50 text-purple-700 border-purple-100',
 }
 
 export default function ShopPage() {
   return (
-    <div className="min-h-screen bg-[#FAFAF7]">
+    <div className="min-h-screen bg-[#F7F6F2]">
       <Navbar />
       <main className="max-w-6xl mx-auto px-6 py-12">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1A1A1A] tracking-tight mb-2">Товары</h1>
-          <p className="text-[#4A4A4A]">Книги, курсы и материалы для подготовки к ЕНТ</p>
+          <h1 className="text-3xl font-black text-[#111111] tracking-tight mb-1">Товары</h1>
+          <p className="text-sm text-[#444444] font-medium">Книги, курсы и материалы для подготовки к ЕНТ</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map(p => (
-            <div key={p.id} className="bg-white border border-[#E8E8E4] rounded-2xl p-5 hover:shadow-sm hover:border-[#BFCFFF] transition-all flex flex-col">
-              <div className="flex items-start justify-between mb-3">
+            <div key={p.id} className="bg-white border border-[#E2E0D8] rounded-3xl p-6 hover:shadow-md hover:shadow-black/5 transition-all flex flex-col">
+              <div className="flex items-start justify-between mb-4">
                 <span className="text-4xl">{p.emoji}</span>
                 {p.badge && (
-                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${badgeColor[p.badge]}`}>{p.badge}</span>
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${badgeColor[p.badge]}`}>{p.badge}</span>
                 )}
               </div>
-              <p className="text-xs text-[#9A9A9A] mb-1">{p.type}</p>
-              <h3 className="font-semibold text-[#1A1A1A] text-sm leading-snug mb-4 flex-1">{p.name}</h3>
-              <div className="flex items-center justify-between mt-auto">
+              <p className="text-xs text-[#999999] font-bold uppercase tracking-wide mb-1">{p.type}</p>
+              <h3 className="font-black text-[#111111] text-sm leading-snug mb-4 flex-1">{p.name}</h3>
+              <div className="flex items-center justify-between pt-4 border-t border-[#F7F6F2]">
                 <div>
-                  <span className="text-lg font-bold text-[#1A1A1A]">{p.price.toLocaleString()} ₸</span>
+                  <span className="text-lg font-black text-[#111111]">{p.price.toLocaleString()} ₸</span>
                   {p.oldPrice && (
-                    <span className="text-sm text-[#9A9A9A] line-through ml-2">{p.oldPrice.toLocaleString()} ₸</span>
+                    <span className="text-sm text-[#999999] line-through ml-2">{p.oldPrice.toLocaleString()} ₸</span>
                   )}
                 </div>
                 <Link href="/auth/register"
-                  className="text-xs font-semibold bg-[#2563EB] text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition">
+                  className="text-xs font-bold bg-[#111111] text-white px-4 py-2 rounded-xl hover:bg-[#2563EB] transition shadow-sm">
                   Купить
                 </Link>
               </div>
