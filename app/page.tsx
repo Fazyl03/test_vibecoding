@@ -235,38 +235,8 @@ export default function HomePage() {
 
           {/* Hero visual */}
           <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-            <div style={{width:'100%', maxWidth:'460px', background:'#fff', borderRadius:'24px', border:'1px solid #E2E8F0', padding:'24px', boxShadow:'0 4px 24px rgba(37,99,235,.10)'}}>
-              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'16px'}}>
-                <span style={{fontSize:'14px', fontWeight:700, color:'#0F172A'}}>
-                  {lang === 'kz' ? 'Сенің прогрессің' : 'Твой прогресс'}
-                </span>
-                <span style={{fontSize:'12px', color:'#2563EB', fontWeight:600, background:'#EEF3FF', padding:'4px 10px', borderRadius:'20px'}}>
-                  {lang === 'kz' ? '3-апта' : 'Неделя 3'}
-                </span>
-              </div>
-              {[
-                {name: lang==='kz' ? 'Математика':'Математика', pct:78, color:'#2563EB'},
-                {name: lang==='kz' ? 'Тарих':'История KZ', pct:91, color:'#16A34A'},
-                {name: lang==='kz' ? 'Физика':'Физика', pct:54, color:'#F59E0B'},
-              ].map(s => (
-                <div key={s.name} style={{marginBottom:'14px'}}>
-                  <div style={{display:'flex', justifyContent:'space-between', fontSize:'13px', fontWeight:600, marginBottom:'6px'}}>
-                    <span style={{color:'#475569'}}>{s.name}</span>
-                    <span style={{color:s.color}}>{s.pct}%</span>
-                  </div>
-                  <div style={{height:'8px', background:'#F1F5F9', borderRadius:'99px', overflow:'hidden'}}>
-                    <div style={{height:'100%', width:`${s.pct}%`, background:s.color, borderRadius:'99px'}}/>
-                  </div>
-                </div>
-              ))}
-              <div style={{background:'#EEF3FF', borderRadius:'12px', padding:'14px 16px', marginTop:'8px'}}>
-                <p style={{fontSize:'12px', fontWeight:700, color:'#2563EB', marginBottom:'4px'}}>
-                  {lang==='kz' ? '💡 Ұсыныс' : '💡 Рекомендация'}
-                </p>
-                <p style={{fontSize:'12px', color:'#475569'}}>
-                  {lang==='kz' ? 'Физика бойынша 3 квиз өт — Механика тақырыбы' : 'Пройди 3 квиза по Физике — тема Механика'}
-                </p>
-              </div>
+            <div style={{width:'100%', maxWidth:'500px'}}>
+              <img src="/hero-student.png" alt="student studying" style={{width:'100%', height:'auto', display:'block'}}/>
             </div>
           </div>
         </div>
