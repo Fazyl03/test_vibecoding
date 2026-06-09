@@ -10,24 +10,33 @@ const team = [
 export default function AboutPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#F8FAFC', fontFamily: 'Inter,sans-serif' }}>
+      <style>{`
+        .values-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+        .team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+        @media (max-width: 768px) {
+          .values-grid { grid-template-columns: 1fr; }
+          .team-grid { grid-template-columns: 1fr; }
+          .about-title { font-size: 26px !important; }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .values-grid { grid-template-columns: repeat(2,1fr); }
+          .team-grid { grid-template-columns: repeat(2,1fr); }
+        }
+      `}</style>
       <Navbar />
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
-        <div style={{ marginBottom: '48px' }}>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 16px' }}>
+        <div style={{ marginBottom: '40px' }}>
           <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#2563EB', marginBottom: '10px' }}>О ПЛАТФОРМЕ</div>
-          <h1 style={{ fontSize: '36px', fontWeight: 900, color: '#0F172A', letterSpacing: '-.5px', lineHeight: 1.2, marginBottom: '12px' }}>Мы помогаем казахстанским ученикам сдать ЕНТ</h1>
-          <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.7, maxWidth: '600px' }}>QazTestPrep — образовательная платформа для подготовки к ЕНТ. Мы объединяем лучших учителей Казахстана и создаём инструменты, которые делают подготовку эффективной.</p>
+          <h1 className="about-title" style={{ fontSize: '32px', fontWeight: 900, color: '#0F172A', letterSpacing: '-.5px', lineHeight: 1.2, marginBottom: '12px' }}>Мы помогаем казахстанским ученикам сдать ЕНТ</h1>
+          <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.7, maxWidth: '600px' }}>QazTestPrep — образовательная платформа для подготовки к ЕНТ. Объединяем лучших учителей Казахстана и создаём инструменты для эффективной подготовки.</p>
         </div>
 
-        <div style={{ background: '#fff', borderRadius: '20px', border: '1px solid #E2E8F0', padding: '40px', marginBottom: '32px' }}>
-          <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', marginBottom: '28px' }}>Наши ценности</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '24px' }}>
-            {[
-              { icon: '🎯', t: 'Доступность', d: 'Качественная подготовка к ЕНТ должна быть доступна каждому ученику.' },
-              { icon: '📈', t: 'Результат', d: 'Мы фокусируемся на реальном росте баллов, а не на количестве материала.' },
-              { icon: '🤝', t: 'Сообщество', d: 'Ученики и учителя на одной платформе — вместе к общей цели.' },
-            ].map((v, i) => (
-              <div key={i} style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ width: '44px', height: '44px', flexShrink: 0, borderRadius: '12px', background: '#EEF3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>{v.icon}</div>
+        <div style={{ background: '#fff', borderRadius: '20px', border: '1px solid #E2E8F0', padding: '32px', marginBottom: '28px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '24px' }}>Наши ценности</h2>
+          <div className="values-grid">
+            {[{ icon: '🎯', t: 'Доступность', d: 'Качественная подготовка к ЕНТ должна быть доступна каждому.' }, { icon: '📈', t: 'Результат', d: 'Фокус на реальном росте баллов, а не на объёме материала.' }, { icon: '🤝', t: 'Сообщество', d: 'Ученики и учителя на одной платформе — вместе к цели.' }].map((v, i) => (
+              <div key={i} style={{ display: 'flex', gap: '14px' }}>
+                <div style={{ width: '42px', height: '42px', flexShrink: 0, borderRadius: '12px', background: '#EEF3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>{v.icon}</div>
                 <div>
                   <div style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>{v.t}</div>
                   <div style={{ fontSize: '14px', color: '#475569', lineHeight: 1.6 }}>{v.d}</div>
@@ -37,22 +46,22 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', marginBottom: '20px' }}>Наша команда</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px', marginBottom: '40px' }}>
+        <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', marginBottom: '16px' }}>Наша команда</h2>
+        <div className="team-grid" style={{ marginBottom: '32px' }}>
           {team.map(t => (
-            <div key={t.name} style={{ background: '#fff', borderRadius: '20px', padding: '28px', border: '1px solid #E2E8F0', textAlign: 'center' }}>
-              <span style={{ fontSize: '48px', display: 'block', marginBottom: '12px' }}>{t.emoji}</span>
-              <div style={{ fontSize: '16px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>{t.name}</div>
+            <div key={t.name} style={{ background: '#fff', borderRadius: '20px', padding: '24px', border: '1px solid #E2E8F0', textAlign: 'center' }}>
+              <span style={{ fontSize: '44px', display: 'block', marginBottom: '12px' }}>{t.emoji}</span>
+              <div style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>{t.name}</div>
               <div style={{ fontSize: '14px', fontWeight: 600, color: '#2563EB', marginBottom: '4px' }}>{t.role}</div>
               <div style={{ fontSize: '13px', color: '#94A3B8' }}>{t.exp}</div>
             </div>
           ))}
         </div>
 
-        <div style={{ background: '#1E3A8A', borderRadius: '20px', padding: '48px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#fff', marginBottom: '10px' }}>Присоединяйся к нам</h2>
-          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,.6)', marginBottom: '24px' }}>Тысячи учеников уже готовятся к ЕНТ вместе с нами</p>
-          <Link href="/auth/register" style={{ fontFamily: 'Inter,sans-serif', fontSize: '15px', fontWeight: 700, padding: '14px 32px', border: 'none', borderRadius: '50px', background: '#fff', color: '#1E3A8A', cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}>
+        <div style={{ background: '#1E3A8A', borderRadius: '20px', padding: '40px 24px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '26px', fontWeight: 800, color: '#fff', marginBottom: '10px' }}>Присоединяйся к нам</h2>
+          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,.6)', marginBottom: '22px' }}>Тысячи учеников уже готовятся к ЕНТ вместе с нами</p>
+          <Link href="/auth/register" style={{ fontFamily: 'Inter,sans-serif', fontSize: '15px', fontWeight: 700, padding: '14px 32px', border: 'none', borderRadius: '50px', background: '#fff', color: '#1E3A8A', textDecoration: 'none', display: 'inline-block' }}>
             Зарегистрироваться бесплатно
           </Link>
         </div>
