@@ -2,11 +2,12 @@ import Navbar from '@/components/layout/Navbar'
 import Link from 'next/link'
 
 const subjectColor: Record<string, string> = {
-  'Математика':         'bg-blue-50 text-blue-700 border-blue-100',
-  'История Казахстана': 'bg-amber-50 text-amber-700 border-amber-100',
-  'Физика':             'bg-purple-50 text-purple-700 border-purple-100',
-  'Химия':              'bg-green-50 text-green-700 border-green-100',
-  'Биология':           'bg-emerald-50 text-emerald-700 border-emerald-100',
+  'Математика': '#2563EB', 'История Казахстана': '#D97706',
+  'Физика': '#7C3AED', 'Химия': '#16A34A', 'Биология': '#059669',
+}
+const subjectBg: Record<string, string> = {
+  'Математика': '#EEF3FF', 'История Казахстана': '#FFFBEB',
+  'Физика': '#F5F3FF', 'Химия': '#F0FDF4', 'Биология': '#ECFDF5',
 }
 
 const videos = [
@@ -20,42 +21,30 @@ const videos = [
 
 export default function VideosPage() {
   return (
-    <div className="min-h-screen bg-[#F7F6F2]">
+    <div style={{ minHeight: '100vh', background: '#F8FAFC', fontFamily: 'Inter,sans-serif' }}>
       <Navbar />
-      <main className="max-w-6xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <h1 className="text-3xl font-black text-[#111111] tracking-tight mb-1">Видеоуроки</h1>
-          <p className="text-sm text-[#444444] font-medium">Понятные объяснения сложных тем от опытных учителей</p>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
+        <div style={{ marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#0F172A', marginBottom: '6px', letterSpacing: '-.5px' }}>Видеоуроки</h1>
+          <p style={{ fontSize: '15px', color: '#475569' }}>Понятные объяснения сложных тем от опытных учителей</p>
         </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
           {videos.map(v => (
-            <div key={v.id} className="bg-white border border-[#E2E0D8] rounded-3xl overflow-hidden hover:shadow-md hover:shadow-black/5 transition-all group">
-              <div className="h-40 bg-gradient-to-br from-[#EEF3FF] to-[#F7F6F2] flex items-center justify-center text-5xl relative">
+            <div key={v.id} style={{ background: '#fff', borderRadius: '20px', overflow: 'hidden', border: '1px solid #E2E8F0' }}>
+              <div style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '56px', background: 'linear-gradient(135deg,#EEF3FF,#BFCFFF)', position: 'relative' }}>
                 {v.thumb}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
-                  <div className="w-14 h-14 bg-[#2563EB] rounded-2xl flex items-center justify-center shadow-xl shadow-blue-300">
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                      <path d="M6 4L14 9L6 14V4Z" fill="white"/>
-                    </svg>
-                  </div>
-                </div>
-                <span className="absolute bottom-2 right-2 bg-[#111111]/80 text-white text-xs font-bold px-2 py-0.5 rounded-lg">
-                  {v.duration}
-                </span>
+                <span style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,.65)', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '3px 8px', borderRadius: '6px' }}>{v.duration}</span>
               </div>
-              <div className="p-5">
-                <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${subjectColor[v.subject] ?? 'bg-gray-50 text-gray-700 border-gray-100'}`}>
-                  {v.subject}
-                </span>
-                <h3 className="font-black text-[#111111] text-sm leading-snug mt-3 mb-3">{v.title}</h3>
-                <div className="flex items-center justify-between pt-3 border-t border-[#F7F6F2]">
+              <div style={{ padding: '18px 20px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, color: subjectColor[v.subject] ?? '#2563EB', background: subjectBg[v.subject] ?? '#EEF3FF', padding: '3px 10px', borderRadius: '20px' }}>{v.subject}</span>
+                <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', lineHeight: 1.35, margin: '10px 0 8px' }}>{v.title}</h3>
+                <div style={{ height: '1px', background: '#F1F5F9', margin: '12px 0' }} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div>
-                    <p className="text-xs text-[#999999] font-semibold">👤 {v.teacher}</p>
-                    <p className="text-xs text-[#999999] font-semibold">👁 {v.views.toLocaleString()} просмотров</p>
+                    <div style={{ fontSize: '12px', color: '#64748B' }}>👤 {v.teacher}</div>
+                    <div style={{ fontSize: '12px', color: '#64748B' }}>👁 {v.views.toLocaleString()} просмотров</div>
                   </div>
-                  <Link href="/auth/register"
-                    className="text-xs font-bold bg-[#2563EB] text-white px-4 py-2 rounded-xl hover:bg-[#1A44C2] transition shadow-sm shadow-blue-200">
+                  <Link href="/auth/register" style={{ fontFamily: 'Inter,sans-serif', fontSize: '13px', fontWeight: 700, padding: '9px 18px', border: 'none', borderRadius: '10px', background: '#2563EB', color: '#fff', cursor: 'pointer', textDecoration: 'none' }}>
                     Смотреть
                   </Link>
                 </div>
