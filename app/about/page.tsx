@@ -7,83 +7,56 @@ const team = [
   { name: 'Дина Касымова', role: 'Физика и химия', exp: '6 лет опыта', emoji: '👩‍🔬' },
 ]
 
-const values = [
-  { emoji: '🎯', title: 'Доступность', desc: 'Качественная подготовка к ЕНТ должна быть доступна каждому ученику Казахстана.' },
-  { emoji: '📈', title: 'Результат', desc: 'Мы фокусируемся на реальном росте баллов, а не просто на количестве материала.' },
-  { emoji: '🤝', title: 'Сообщество', desc: 'Ученики и учителя на одной платформе — вместе к общей цели.' },
-]
-
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#F7F6F2]">
+    <div style={{ minHeight: '100vh', background: '#F8FAFC', fontFamily: 'Inter,sans-serif' }}>
       <Navbar />
-
-      <section className="max-w-6xl mx-auto px-6 pt-16 pb-12">
-        <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 bg-[#EEF3FF] text-[#2563EB] text-xs font-bold px-3 py-1.5 rounded-full mb-6 border border-[#BFCFFF]">
-            <span className="w-1.5 h-1.5 bg-[#2563EB] rounded-full"/>
-            О платформе
-          </div>
-          <h1 className="text-4xl font-black text-[#111111] tracking-tight mb-4">
-            Мы помогаем казахстанским{' '}
-            <span className="font-['Instrument_Serif'] italic font-normal text-[#2563EB]">ученикам</span>{' '}
-            сдать ЕНТ
-          </h1>
-          <p className="text-[#444444] leading-relaxed">
-            QazTestPrep — образовательная платформа для подготовки к ЕНТ. Мы объединяем лучших учителей Казахстана и создаём инструменты, которые делают подготовку эффективной.
-          </p>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
+        <div style={{ marginBottom: '48px' }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#2563EB', marginBottom: '10px' }}>О ПЛАТФОРМЕ</div>
+          <h1 style={{ fontSize: '36px', fontWeight: 900, color: '#0F172A', letterSpacing: '-.5px', lineHeight: 1.2, marginBottom: '12px' }}>Мы помогаем казахстанским ученикам сдать ЕНТ</h1>
+          <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.7, maxWidth: '600px' }}>QazTestPrep — образовательная платформа для подготовки к ЕНТ. Мы объединяем лучших учителей Казахстана и создаём инструменты, которые делают подготовку эффективной.</p>
         </div>
-      </section>
 
-      <section className="bg-white border-y border-[#E2E0D8]">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <h2 className="text-2xl font-black text-[#111111] tracking-tight mb-8">Наши ценности</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {values.map(v => (
-              <div key={v.title} className="flex gap-4">
-                <div className="w-10 h-10 bg-[#EEF3FF] rounded-2xl flex items-center justify-center text-xl shrink-0">{v.emoji}</div>
+        <div style={{ background: '#fff', borderRadius: '20px', border: '1px solid #E2E8F0', padding: '40px', marginBottom: '32px' }}>
+          <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', marginBottom: '28px' }}>Наши ценности</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '24px' }}>
+            {[
+              { icon: '🎯', t: 'Доступность', d: 'Качественная подготовка к ЕНТ должна быть доступна каждому ученику.' },
+              { icon: '📈', t: 'Результат', d: 'Мы фокусируемся на реальном росте баллов, а не на количестве материала.' },
+              { icon: '🤝', t: 'Сообщество', d: 'Ученики и учителя на одной платформе — вместе к общей цели.' },
+            ].map((v, i) => (
+              <div key={i} style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ width: '44px', height: '44px', flexShrink: 0, borderRadius: '12px', background: '#EEF3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>{v.icon}</div>
                 <div>
-                  <h3 className="font-black text-[#111111] mb-1">{v.title}</h3>
-                  <p className="text-sm text-[#444444] leading-relaxed">{v.desc}</p>
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>{v.t}</div>
+                  <div style={{ fontSize: '14px', color: '#475569', lineHeight: 1.6 }}>{v.d}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </section>
 
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <h2 className="text-2xl font-black text-[#111111] tracking-tight mb-8">Наша команда</h2>
-        <div className="grid md:grid-cols-3 gap-4">
+        <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0F172A', marginBottom: '20px' }}>Наша команда</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px', marginBottom: '40px' }}>
           {team.map(t => (
-            <div key={t.name} className="bg-white border border-[#E2E0D8] rounded-3xl p-7 text-center hover:border-[#BFCFFF] hover:shadow-md hover:shadow-black/5 transition-all">
-              <span className="text-5xl block mb-4">{t.emoji}</span>
-              <h3 className="font-black text-[#111111] mb-1">{t.name}</h3>
-              <p className="text-sm text-[#2563EB] font-bold mb-1">{t.role}</p>
-              <p className="text-xs text-[#999999] font-semibold">{t.exp}</p>
+            <div key={t.name} style={{ background: '#fff', borderRadius: '20px', padding: '28px', border: '1px solid #E2E8F0', textAlign: 'center' }}>
+              <span style={{ fontSize: '48px', display: 'block', marginBottom: '12px' }}>{t.emoji}</span>
+              <div style={{ fontSize: '16px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>{t.name}</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#2563EB', marginBottom: '4px' }}>{t.role}</div>
+              <div style={{ fontSize: '13px', color: '#94A3B8' }}>{t.exp}</div>
             </div>
           ))}
         </div>
-      </section>
 
-      <section className="max-w-6xl mx-auto px-6 pb-20">
-        <div className="bg-[#111111] rounded-3xl px-10 py-14 text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#2563EB]/20 to-transparent pointer-events-none"/>
-          <h2 className="text-2xl font-black text-white mb-3 relative">Присоединяйся к нам</h2>
-          <p className="text-white/50 text-sm mb-6 relative">Тысячи учеников уже готовятся к ЕНТ вместе с нами</p>
-          <Link href="/auth/register"
-            className="inline-flex items-center gap-2 bg-white text-[#111111] font-bold px-7 py-3.5 rounded-2xl hover:bg-[#F7F6F2] transition text-sm relative">
+        <div style={{ background: '#1E3A8A', borderRadius: '20px', padding: '48px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#fff', marginBottom: '10px' }}>Присоединяйся к нам</h2>
+          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,.6)', marginBottom: '24px' }}>Тысячи учеников уже готовятся к ЕНТ вместе с нами</p>
+          <Link href="/auth/register" style={{ fontFamily: 'Inter,sans-serif', fontSize: '15px', fontWeight: 700, padding: '14px 32px', border: 'none', borderRadius: '50px', background: '#fff', color: '#1E3A8A', cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}>
             Зарегистрироваться бесплатно
           </Link>
         </div>
-      </section>
-
-      <footer className="border-t border-[#E2E0D8] py-8">
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-          <span className="text-sm font-black">Qaz<span className="text-[#2563EB]">TestPrep</span></span>
-          <p className="text-xs text-[#999999]">© 2025 QazTestPrep. Алматы, Казахстан</p>
-        </div>
-      </footer>
+      </main>
     </div>
   )
 }
