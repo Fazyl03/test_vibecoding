@@ -13,31 +13,34 @@ const products = [
 export default function ShopPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#F8FAFC', fontFamily: 'Inter,sans-serif' }}>
+      <style>{`
+        .shop-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+        @media (max-width: 768px) { .shop-grid { grid-template-columns: 1fr; } }
+        @media (min-width: 769px) and (max-width: 1024px) { .shop-grid { grid-template-columns: repeat(2,1fr); } }
+      `}</style>
       <Navbar />
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#0F172A', marginBottom: '6px', letterSpacing: '-.5px' }}>Товары</h1>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 16px' }}>
+        <div style={{ marginBottom: '28px' }}>
+          <h1 style={{ fontSize: '30px', fontWeight: 900, color: '#0F172A', marginBottom: '6px' }}>Товары</h1>
           <p style={{ fontSize: '15px', color: '#475569' }}>Книги, курсы и материалы для подготовки к ЕНТ</p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
+        <div className="shop-grid">
           {products.map(p => (
-            <div key={p.id} style={{ background: '#fff', borderRadius: '20px', padding: '24px', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
+            <div key={p.id} style={{ background: '#fff', borderRadius: '20px', padding: '20px', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '14px' }}>
                 <span style={{ fontSize: '40px' }}>{p.emoji}</span>
                 {p.badge && <span style={{ fontSize: '12px', fontWeight: 700, color: p.badgeColor, background: p.badgeBg, padding: '3px 10px', borderRadius: '20px' }}>{p.badge}</span>}
               </div>
-              <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: '#94A3B8', marginBottom: '6px' }}>{p.type}</div>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0F172A', lineHeight: 1.35, marginBottom: '16px', flex: 1 }}>{p.name}</h3>
-              <div style={{ height: '1px', background: '#F1F5F9', marginBottom: '16px' }} />
+              <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: '#94A3B8', marginBottom: '5px' }}>{p.type}</div>
+              <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', lineHeight: 1.35, marginBottom: '14px', flex: 1 }}>{p.name}</h3>
+              <div style={{ height: '1px', background: '#F1F5F9', marginBottom: '14px' }} />
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div>
-                  <span style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A' }}>{p.price.toLocaleString()} </span>
+                  <span style={{ fontSize: '19px', fontWeight: 800, color: '#0F172A' }}>{p.price.toLocaleString()} </span>
                   <span style={{ fontSize: '13px', color: '#94A3B8' }}>тг</span>
-                  {p.oldPrice && <span style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'line-through', marginLeft: '8px' }}>{p.oldPrice.toLocaleString()}</span>}
+                  {p.oldPrice && <span style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'line-through', marginLeft: '6px' }}>{p.oldPrice.toLocaleString()}</span>}
                 </div>
-                <Link href="/auth/register" style={{ fontFamily: 'Inter,sans-serif', fontSize: '13px', fontWeight: 700, padding: '9px 18px', border: 'none', borderRadius: '10px', background: '#2563EB', color: '#fff', cursor: 'pointer', textDecoration: 'none' }}>
-                  Купить
-                </Link>
+                <Link href="/auth/register" style={{ fontFamily: 'Inter,sans-serif', fontSize: '13px', fontWeight: 700, padding: '9px 16px', border: 'none', borderRadius: '10px', background: '#2563EB', color: '#fff', textDecoration: 'none' }}>Купить</Link>
               </div>
             </div>
           ))}
