@@ -4,81 +4,58 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 const navLinks = [
-  { href: '/',        label: 'Главная' },
-  { href: '/quizzes', label: 'Квизы' },
-  { href: '/videos',  label: 'Видеоуроки' },
-  { href: '/shop',    label: 'Товары' },
-  { href: '/about',   label: 'О нас' },
+  { label: 'Главная',     href: '/' },
+  { label: 'Квизы',       href: '/quizzes' },
+  { label: 'Видеоуроки',  href: '/videos' },
+  { label: 'Товары',      href: '/shop' },
+  { label: 'Контакты',    href: '/about' },
 ]
 
 export default function Navbar() {
   const pathname = usePathname()
-  const [open, setOpen] = useState(false)
+  const [cartCount] = useState(0)
+  const [cartTotal] = useState(0)
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#F7F6F2]/95 backdrop-blur-md border-b border-[#E2E0D8]">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <nav style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(255,255,255,.96)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #E2E8F0', height: '68px', padding: '0 24px', fontFamily: 'Inter,sans-serif' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="w-8 h-8 bg-[#2563EB] rounded-xl flex items-center justify-center shadow-md shadow-blue-200">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 12L8 4L13 12H3Z" fill="white"/></svg>
-          </div>
-          <span className="font-black text-[15px] tracking-tight">Qaz<span className="text-[#2563EB]">TestPrep</span></span>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+          <div style={{ width: '38px', height: '38px', background: '#2563EB', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 900, color: '#fff', fontStyle: 'italic' }}>Q</div>
+          <span style={{ fontSize: '18px', fontWeight: 800, color: '#0F172A' }}>Qaz<span style={{ color: '#2563EB' }}>TestPrep</span></span>
         </Link>
 
-        {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-1 list-none">
-          {navLinks.map(({ href, label }) => (
-            <li key={href}>
-              <Link href={href}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                  pathname === href
-                    ? 'bg-[#EEF3FF] text-[#2563EB]'
-                    : 'text-[#444444] hover:text-[#111111] hover:bg-black/5'
-                }`}>
-                {label}
-              </Link>
-            </li>
-          ))}
+        {/* Nav links */}
+        <ul style={{ display: 'flex', alignItems: 'center', gap: '4px', listStyle: 'none', margin: 0, padding: 0 }}>
+          {navLinks.map((item, i) => {
+            const active = pathname === item.href
+            return (
+              <li key={i}>
+                <Link href={item.href} style={{ fontSize: '14px', fontWeight: active ? 600 : 500, color: active ? '#fff' : '#475569', textDecoration: 'none', padding: '8px 14px', borderRadius: '8px', background: active ? '#2563EB' : 'transparent', display: 'block', transition: 'all .2s' }}>
+                  {item.label}
+                </Link>
+              </li>
+            )
+          })}
         </ul>
 
-        {/* Desktop CTA */}
-        <div className="hidden md:flex items-center gap-2">
-          <Link href="/auth/login"
-            className="text-sm font-semibold text-[#444444] hover:text-[#111111] px-4 py-2 rounded-xl hover:bg-black/5 transition-all">
+        {/* Cart + Login */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', fontWeight: 600, padding: '8px 14px', border: '1.5px solid #E2E8F0', borderRadius: '8px', background: '#fff', color: '#475569', cursor: 'pointer', fontFamily: 'Inter,sans-serif', position: 'relative' }}>
+            <span style={{ fontWeight: 700, color: '#0F172A' }}>{cartTotal} тг</span>
+            <span style={{ fontSize: '18px', lineHeight: 1 }}>🛒</span>
+            {cartCount > 0 && (
+              <span style={{ position: 'absolute', top: '-6px', right: '-6px', background: '#EF4444', color: '#fff', fontSize: '10px', fontWeight: 800, width: '17px', height: '17px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #fff' }}>
+                {cartCount}
+              </span>
+            )}
+          </button>
+          <Link href="/auth/login" style={{ fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 600, padding: '9px 20px', border: 'none', borderRadius: '8px', background: '#2563EB', color: '#fff', textDecoration: 'none' }}>
             Войти
           </Link>
-          <Link href="/auth/register"
-            className="text-sm font-bold bg-[#2563EB] text-white px-5 py-2.5 rounded-xl hover:bg-[#1A44C2] transition-all shadow-md shadow-blue-200">
-            Начать бесплатно
-          </Link>
         </div>
-
-        {/* Mobile burger */}
-        <button onClick={() => setOpen(!open)} className="md:hidden p-2 rounded-xl hover:bg-black/5 transition">
-          <div className={`w-5 h-0.5 bg-[#111111] transition-all mb-1.5 ${open ? 'rotate-45 translate-y-2' : ''}`}/>
-          <div className={`w-5 h-0.5 bg-[#111111] transition-all mb-1.5 ${open ? 'opacity-0' : ''}`}/>
-          <div className={`w-5 h-0.5 bg-[#111111] transition-all ${open ? '-rotate-45 -translate-y-2' : ''}`}/>
-        </button>
       </div>
-
-      {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden border-t border-[#E2E0D8] bg-[#F7F6F2] px-6 py-4 flex flex-col gap-1">
-          {navLinks.map(({ href, label }) => (
-            <Link key={href} href={href} onClick={() => setOpen(false)}
-              className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
-                pathname === href ? 'bg-[#EEF3FF] text-[#2563EB]' : 'text-[#444444]'
-              }`}>
-              {label}
-            </Link>
-          ))}
-          <div className="flex flex-col gap-2 pt-3 mt-2 border-t border-[#E2E0D8]">
-            <Link href="/auth/login" className="text-sm font-semibold text-center border border-[#E2E0D8] py-3 rounded-xl bg-white">Войти</Link>
-            <Link href="/auth/register" className="text-sm font-bold text-center bg-[#2563EB] text-white py-3 rounded-xl">Начать бесплатно</Link>
-          </div>
-        </div>
-      )}
     </nav>
   )
 }
