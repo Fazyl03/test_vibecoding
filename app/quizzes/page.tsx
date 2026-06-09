@@ -16,40 +16,45 @@ const quizzes = [
 
 export default function QuizzesPage() {
   const [activeTab, setActiveTab] = useState(0)
-
   return (
     <div style={{ minHeight: '100vh', background: '#F8FAFC', fontFamily: 'Inter,sans-serif' }}>
+      <style>{`
+        .quiz-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+        @media (max-width: 768px) { .quiz-grid { grid-template-columns: 1fr; } }
+        @media (min-width: 769px) and (max-width: 1024px) { .quiz-grid { grid-template-columns: repeat(2,1fr); } }
+        .tabs-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      `}</style>
       <Navbar />
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#0F172A', marginBottom: '6px', letterSpacing: '-.5px' }}>Квизы</h1>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 16px' }}>
+        <div style={{ marginBottom: '28px' }}>
+          <h1 style={{ fontSize: '30px', fontWeight: 900, color: '#0F172A', marginBottom: '6px' }}>Квизы</h1>
           <p style={{ fontSize: '15px', color: '#475569' }}>Тренируйся с тестами от лучших учителей Казахстана</p>
         </div>
-
-        <div style={{ display: 'flex', gap: '6px', marginBottom: '32px', background: '#E2E8F0', padding: '4px', borderRadius: '12px', width: 'fit-content' }}>
-          {tabs.map((tab, i) => (
-            <button key={i} onClick={() => setActiveTab(i)} style={{ fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 600, padding: '10px 24px', borderRadius: '9px', border: 'none', cursor: 'pointer', transition: 'all .2s', background: activeTab === i ? '#fff' : 'transparent', color: activeTab === i ? '#2563EB' : '#475569', boxShadow: activeTab === i ? '0 2px 8px rgba(0,0,0,.06)' : 'none' }}>
-              {tab}
-            </button>
-          ))}
+        <div className="tabs-scroll" style={{ marginBottom: '28px' }}>
+          <div style={{ display: 'flex', gap: '6px', background: '#E2E8F0', padding: '4px', borderRadius: '12px', width: 'fit-content', minWidth: 'max-content' }}>
+            {tabs.map((tab, i) => (
+              <button key={i} onClick={() => setActiveTab(i)} style={{ fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 600, padding: '10px 20px', borderRadius: '9px', border: 'none', cursor: 'pointer', background: activeTab === i ? '#fff' : 'transparent', color: activeTab === i ? '#2563EB' : '#475569', boxShadow: activeTab === i ? '0 2px 8px rgba(0,0,0,.06)' : 'none', transition: 'all .2s', whiteSpace: 'nowrap' }}>
+                {tab}
+              </button>
+            ))}
+          </div>
         </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
+        <div className="quiz-grid">
           {quizzes.map(q => (
-            <div key={q.id} style={{ background: '#fff', borderRadius: '20px', padding: '24px', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+            <div key={q.id} style={{ background: '#fff', borderRadius: '20px', padding: '20px', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                 <span style={{ fontSize: '13px', fontWeight: 600, color: q.subjectColor, background: '#EEF3FF', padding: '4px 12px', borderRadius: '20px' }}>{q.subject}</span>
                 <span style={{ fontSize: '13px', fontWeight: 600, color: q.diffColor, background: q.diffBg, padding: '4px 12px', borderRadius: '20px' }}>{q.difficulty}</span>
               </div>
-              <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#0F172A', lineHeight: 1.35, marginBottom: '10px' }}>{q.title}</h3>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '13px', color: '#64748B', marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0F172A', lineHeight: 1.35, marginBottom: '10px' }}>{q.title}</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', fontSize: '13px', color: '#64748B', marginBottom: '16px' }}>
                 <span>📋 {q.questions} вопросов</span>
                 <span>🕐 {q.duration}</span>
               </div>
-              <div style={{ height: '1px', background: '#F1F5F9', marginBottom: '16px' }} />
+              <div style={{ height: '1px', background: '#F1F5F9', marginBottom: '14px' }} />
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: '13px', color: '#64748B' }}>👤 {q.teacher}</span>
-                <Link href="/auth/register" style={{ fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 700, padding: '10px 24px', border: 'none', borderRadius: '10px', background: '#2563EB', color: '#fff', cursor: 'pointer', textDecoration: 'none' }}>
+                <Link href="/auth/register" style={{ fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 700, padding: '10px 22px', border: 'none', borderRadius: '10px', background: '#2563EB', color: '#fff', textDecoration: 'none' }}>
                   Начать
                 </Link>
               </div>
