@@ -2,50 +2,40 @@ import Navbar from '@/components/layout/Navbar'
 import Link from 'next/link'
 
 const products = [
-  { id: 1, name: 'Сборник ЕНТ 2025 — Математика', type: 'Книга', price: 3500, oldPrice: 5000, emoji: '📗', badge: 'Хит' },
-  { id: 2, name: 'История Казахстана — шпаргалки и тесты', type: 'Книга', price: 2900, oldPrice: null, emoji: '📘', badge: null },
-  { id: 3, name: 'Полный комплект ЕНТ 2025 (все предметы)', type: 'Набор', price: 12000, oldPrice: 18000, emoji: '📚', badge: 'Выгодно' },
-  { id: 4, name: 'Тетрадь для решения задач А4', type: 'Канцелярия', price: 800, oldPrice: null, emoji: '📓', badge: null },
-  { id: 5, name: 'Флэш-карточки — Химия (200 шт)', type: 'Канцелярия', price: 1500, oldPrice: 2000, emoji: '🗂', badge: null },
-  { id: 6, name: 'Онлайн-курс: Физика с нуля до 140+', type: 'Курс', price: 8900, oldPrice: 15000, emoji: '🎓', badge: 'Новинка' },
+  { id: 1, name: 'Сборник ЕНТ 2025 — Математика', type: 'Книга', price: 3500, oldPrice: 5000, emoji: '📗', badge: 'Хит', badgeColor: '#DC2626', badgeBg: '#FEF2F2' },
+  { id: 2, name: 'История Казахстана — шпаргалки', type: 'Книга', price: 2900, oldPrice: null, emoji: '📘', badge: null, badgeColor: '', badgeBg: '' },
+  { id: 3, name: 'Полный комплект ЕНТ 2025', type: 'Набор', price: 12000, oldPrice: 18000, emoji: '📚', badge: 'Выгодно', badgeColor: '#16A34A', badgeBg: '#F0FDF4' },
+  { id: 4, name: 'Тетрадь для задач А4', type: 'Канцелярия', price: 800, oldPrice: null, emoji: '📓', badge: null, badgeColor: '', badgeBg: '' },
+  { id: 5, name: 'Флэш-карточки — Химия (200 шт)', type: 'Канцелярия', price: 1500, oldPrice: 2000, emoji: '🗂', badge: null, badgeColor: '', badgeBg: '' },
+  { id: 6, name: 'Онлайн-курс: Физика с нуля', type: 'Курс', price: 8900, oldPrice: 15000, emoji: '🎓', badge: 'Новинка', badgeColor: '#7C3AED', badgeBg: '#F5F3FF' },
 ]
-
-const badgeColor: Record<string, string> = {
-  'Хит':     'bg-red-50 text-red-600 border-red-100',
-  'Выгодно': 'bg-emerald-50 text-emerald-700 border-emerald-100',
-  'Новинка': 'bg-purple-50 text-purple-700 border-purple-100',
-}
 
 export default function ShopPage() {
   return (
-    <div className="min-h-screen bg-[#F7F6F2]">
+    <div style={{ minHeight: '100vh', background: '#F8FAFC', fontFamily: 'Inter,sans-serif' }}>
       <Navbar />
-      <main className="max-w-6xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <h1 className="text-3xl font-black text-[#111111] tracking-tight mb-1">Товары</h1>
-          <p className="text-sm text-[#444444] font-medium">Книги, курсы и материалы для подготовки к ЕНТ</p>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 24px' }}>
+        <div style={{ marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#0F172A', marginBottom: '6px', letterSpacing: '-.5px' }}>Товары</h1>
+          <p style={{ fontSize: '15px', color: '#475569' }}>Книги, курсы и материалы для подготовки к ЕНТ</p>
         </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
           {products.map(p => (
-            <div key={p.id} className="bg-white border border-[#E2E0D8] rounded-3xl p-6 hover:shadow-md hover:shadow-black/5 transition-all flex flex-col">
-              <div className="flex items-start justify-between mb-4">
-                <span className="text-4xl">{p.emoji}</span>
-                {p.badge && (
-                  <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${badgeColor[p.badge]}`}>{p.badge}</span>
-                )}
+            <div key={p.id} style={{ background: '#fff', borderRadius: '20px', padding: '24px', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <span style={{ fontSize: '40px' }}>{p.emoji}</span>
+                {p.badge && <span style={{ fontSize: '12px', fontWeight: 700, color: p.badgeColor, background: p.badgeBg, padding: '3px 10px', borderRadius: '20px' }}>{p.badge}</span>}
               </div>
-              <p className="text-xs text-[#999999] font-bold uppercase tracking-wide mb-1">{p.type}</p>
-              <h3 className="font-black text-[#111111] text-sm leading-snug mb-4 flex-1">{p.name}</h3>
-              <div className="flex items-center justify-between pt-4 border-t border-[#F7F6F2]">
+              <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: '#94A3B8', marginBottom: '6px' }}>{p.type}</div>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0F172A', lineHeight: 1.35, marginBottom: '16px', flex: 1 }}>{p.name}</h3>
+              <div style={{ height: '1px', background: '#F1F5F9', marginBottom: '16px' }} />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div>
-                  <span className="text-lg font-black text-[#111111]">{p.price.toLocaleString()} ₸</span>
-                  {p.oldPrice && (
-                    <span className="text-sm text-[#999999] line-through ml-2">{p.oldPrice.toLocaleString()} ₸</span>
-                  )}
+                  <span style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A' }}>{p.price.toLocaleString()} </span>
+                  <span style={{ fontSize: '13px', color: '#94A3B8' }}>тг</span>
+                  {p.oldPrice && <span style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'line-through', marginLeft: '8px' }}>{p.oldPrice.toLocaleString()}</span>}
                 </div>
-                <Link href="/auth/register"
-                  className="text-xs font-bold bg-[#111111] text-white px-4 py-2 rounded-xl hover:bg-[#2563EB] transition shadow-sm">
+                <Link href="/auth/register" style={{ fontFamily: 'Inter,sans-serif', fontSize: '13px', fontWeight: 700, padding: '9px 18px', border: 'none', borderRadius: '10px', background: '#2563EB', color: '#fff', cursor: 'pointer', textDecoration: 'none' }}>
                   Купить
                 </Link>
               </div>
