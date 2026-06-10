@@ -8,6 +8,8 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// ─── AUTH ────────────────────────────────────────────────────
+
 model User {
   id          String   @id @default(cuid())
   name        String
@@ -20,8 +22,17 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  sessions    Session[]
-  otpCodes    OtpCode[]
+  sessions       Session[]
+  otpCodes       OtpCode[]
+  subscription   Subscription?
+  coursesOwned   Course[]
+  quizzesOwned   Quiz[]
+  videosOwned    Video[]
+  productsOwned  Product[]
+  classrooms     Classroom[]
+  classMemberships ClassMember[]
+  quizAttempts   QuizAttempt[]
+  enrollments    Enrollment[]
 }
 
 model Session {
@@ -44,10 +55,191 @@ model OtpCode {
   used      Boolean    @default(false)
   expiresAt DateTime
   createdAt DateTime   @default(now())
-
   userId    String?
-  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+// ─── SUBSCRIPTION ────────────────────────────────────────────
+
+model Subscription {
+  id        String             @id @default(cuid())
+  userId    String             @unique
+  plan      SubscriptionPlan
+  status    SubscriptionStatus @default(ACTIVE)
+  startsAt  DateTime           @default(now())
+  expiresAt DateTime
+  createdAt DateTime           @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── COURSE ──────────────────────────────────────────────────
+
+model Course {
+  id          String     @id @default(cuid())
+  teacherId   String
+  title       String
+  description String?
+  price       Int        @default(0)
+  type        CourseType
+  isPublished Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  teacher     User         @relation(fields: [teacherId], references: [id])
+  quizzes     Quiz[]
+  videos      Video[]
+  enrollments Enrollment[]
+}
+
+// ─── QUIZ ────────────────────────────────────────────────────
+
+model Quiz {
+  id          String   @id @default(cuid())
+  teacherId   String
+  courseId    String?
+  title       String
+  subject     String
+  type        QuizType
+  duration    Int
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  teacher     User             @relation(fields: [teacherId], references: [id])
+  course      Course?          @relation(fields: [courseId], references: [id])
+  questions   Question[]
+  attempts    QuizAttempt[]
+  assignments QuizAssignment[]
+}
+
+// ─── QUESTION ────────────────────────────────────────────────
+
+model Question {
+  id            String @id @default(cuid())
+  quizId        String
+  text          String
+  options       Json
+  correctOption String
+  order         Int
+  imageUrl      String?
+
+  quiz    Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers QuizAnswer[]
+}
+
+// ─── VIDEO ───────────────────────────────────────────────────
+
+model Video {
+  id          String   @id @default(cuid())
+  teacherId   String
+  courseId    String?
+  title       String
+  subject     String
+  youtubeUrl  String
+  duration    String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  teacher User    @relation(fields: [teacherId], references: [id])
+  course  Course? @relation(fields: [courseId], references: [id])
+}
+
+// ─── PRODUCT ─────────────────────────────────────────────────
+
+model Product {
+  id          String      @id @default(cuid())
+  teacherId   String
+  name        String
+  description String?
+  price       Int
+  type        ProductType
+  fileUrl     String?
+  isPublished Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+
+  teacher User @relation(fields: [teacherId], references: [id])
+}
+
+// ─── CLASSROOM ───────────────────────────────────────────────
+
+model Classroom {
+  id        String   @id @default(cuid())
+  teacherId String
+  name      String
+  code      String   @unique
+  createdAt DateTime @default(now())
+
+  teacher     User             @relation(fields: [teacherId], references: [id])
+  members     ClassMember[]
+  assignments QuizAssignment[]
+}
+
+model ClassMember {
+  id          String   @id @default(cuid())
+  classroomId String
+  studentId   String
+  joinedAt    DateTime @default(now())
+
+  classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  student   User      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([classroomId, studentId])
+}
+
+model QuizAssignment {
+  id          String    @id @default(cuid())
+  classroomId String
+  quizId      String
+  dueDate     DateTime?
+  assignedAt  DateTime  @default(now())
+
+  classroom Classroom @relation(fields: [classroomId], references: [id])
+  quiz      Quiz      @relation(fields: [quizId], references: [id])
+}
+
+// ─── QUIZ ATTEMPT ────────────────────────────────────────────
+
+model QuizAttempt {
+  id         String    @id @default(cuid())
+  quizId     String
+  studentId  String
+  score      Int
+  total      Int
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+
+  quiz    Quiz         @relation(fields: [quizId], references: [id])
+  student User         @relation(fields: [studentId], references: [id])
+  answers QuizAnswer[]
+}
+
+model QuizAnswer {
+  id         String @id @default(cuid())
+  attemptId  String
+  questionId String
+  chosen     String
+
+  attempt  QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question    @relation(fields: [questionId], references: [id])
+}
+
+// ─── ENROLLMENT ──────────────────────────────────────────────
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  courseId   String
+  studentId  String
+  enrolledAt DateTime @default(now())
+
+  course  Course @relation(fields: [courseId], references: [id])
+  student User   @relation(fields: [studentId], references: [id])
+
+  @@unique([courseId, studentId])
+}
+
+// ─── ENUMS ───────────────────────────────────────────────────
 
 enum Role {
   STUDENT
@@ -58,4 +250,34 @@ enum Role {
 enum OtpPurpose {
   REGISTER
   RESET_PASSWORD
+}
+
+enum SubscriptionPlan {
+  BASIC
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum CourseType {
+  ENT
+  PBB
+  COMBO
+}
+
+enum QuizType {
+  ENT
+  PBB
+  COMBO
+}
+
+enum ProductType {
+  BOOK
+  CHEATSHEET_DIGITAL
+  CHEATSHEET_PHYSICAL
+  OTHER
 }
