@@ -8,7 +8,7 @@ const handler = NextAuth({
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        login:    { label: 'Login',    type: 'text' },
+        login: { label: 'Login', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
@@ -17,8 +17,8 @@ const handler = NextAuth({
         const user = await prisma.user.findFirst({
           where: {
             OR: [
+              { email: credentials.login },
               { username: credentials.login },
-              { email:    credentials.login },
             ],
           },
           select: { id: true, email: true, name: true, password: true, role: true, isBlocked: true, isApproved: true },
@@ -26,11 +26,7 @@ const handler = NextAuth({
 
         if (!user) return null
         if (user.isBlocked) throw new Error('BLOCKED')
-
-        // Учитель должен быть одобрен
-        if (user.role === 'TEACHER' && !user.isApproved) {
-          throw new Error('TEACHER_NOT_APPROVED')
-        }
+        if (user.role === 'TEACHER' && !user.isApproved) throw new Error('TEACHER_NOT_APPROVED')
 
         const valid = await bcrypt.compare(credentials.password, user.password)
         if (!valid) return null
@@ -43,14 +39,14 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.role = (user as any).role
-        token.id   = (user as any).id
+        token.id = (user as any).id
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).role = token.role
-        ;(session.user as any).id  = token.id
+        ;(session.user as any).id = token.id
       }
       return session
     },
