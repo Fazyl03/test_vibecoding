@@ -25,8 +25,6 @@ type Quiz = {
   type: string
   duration: number
   teacher: { name: string }
-  questions?: { length?: number } | unknown[]
-  _count?: { questions: number }
 }
 
 export default function QuizzesClient({ quizzes }: { quizzes: Quiz[] }) {
