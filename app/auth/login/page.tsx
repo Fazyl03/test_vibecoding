@@ -14,63 +14,76 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true); setError('')
+
     const res = await signIn('credentials', { login, password, redirect: false })
+
     if (res?.error) {
-      setError(res.error === 'Аккаунт заблокирован' ? res.error : 'Неверный логин или пароль')
+      if (res.error === 'TEACHER_NOT_APPROVED') {
+        setError('Ваш аккаунт учителя ожидает проверки администратором. Мы уведомим вас по email.')
+      } else if (res.error === 'BLOCKED') {
+        setError('Ваш аккаунт заблокирован. Обратитесь к администратору.')
+      } else {
+        setError('Неверный логин или пароль')
+      }
       setLoading(false)
     } else {
       router.push('/dashboard')
+      router.refresh()
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F6F2] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-[#2563EB] rounded-xl flex items-center justify-center shadow-md shadow-blue-200">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 12L8 4L13 12H3Z" fill="white"/></svg>
-            </div>
-            <span className="font-black text-[15px]">Qaz<span className="text-[#2563EB]">TestPrep</span></span>
+    <div style={{ minHeight: '100vh', background: '#F7F6F2', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', fontFamily: 'Inter,sans-serif' }}>
+      <div style={{ width: '100%', maxWidth: '380px' }}>
+
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', textDecoration: 'none', marginBottom: '24px' }}>
+            <div style={{ width: '36px', height: '36px', background: '#2563EB', borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '17px', fontWeight: 900, color: '#fff', fontStyle: 'italic' }}>Q</div>
+            <span style={{ fontSize: '17px', fontWeight: 800, color: '#0F172A' }}>Qaz<span style={{ color: '#2563EB' }}>TestPrep</span></span>
           </Link>
-          <h1 className="text-2xl font-black text-[#111111] tracking-tight">Добро пожаловать</h1>
-          <p className="text-sm text-[#999999] mt-1 font-medium">Войди в аккаунт</p>
+          <h1 style={{ fontSize: '22px', fontWeight: 900, color: '#111', letterSpacing: '-.5px', marginBottom: '4px' }}>Добро пожаловать</h1>
+          <p style={{ fontSize: '14px', color: '#999', fontWeight: 500 }}>Войди в аккаунт</p>
         </div>
 
-        <div className="bg-white border border-[#E2E0D8] rounded-3xl p-7 shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <div style={{ background: '#fff', border: '1px solid #E2E0D8', borderRadius: '24px', padding: '28px', boxShadow: '0 2px 12px rgba(0,0,0,.04)' }}>
+          <form onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-50 border border-red-100 text-red-600 text-sm px-4 py-3 rounded-2xl font-medium">
+              <div style={{ background: '#FEF2F2', border: '1.5px solid #FECACA', borderRadius: '12px', padding: '12px 14px', fontSize: '13px', color: '#DC2626', fontWeight: 600, marginBottom: '16px', lineHeight: 1.5 }}>
                 {error}
               </div>
             )}
-            <div>
-              <label className="block text-sm font-bold text-[#111111] mb-2">Никнейм или Email</label>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#111', marginBottom: '7px' }}>
+                Никнейм или Email
+              </label>
               <input type="text" value={login} onChange={e => setLogin(e.target.value)}
                 placeholder="username или email@..." required
-                className="w-full border border-[#E2E0D8] bg-[#F7F6F2] rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#EEF3FF] focus:bg-white transition"/>
+                style={{ width: '100%', fontFamily: 'Inter,sans-serif', fontSize: '14px', padding: '11px 14px', border: '1.5px solid #E2E0D8', borderRadius: '14px', background: '#F7F6F2', color: '#111', outline: 'none', boxSizing: 'border-box' }} />
             </div>
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-bold text-[#111111]">Пароль</label>
-                <Link href="/auth/reset-password" className="text-xs font-semibold text-[#2563EB] hover:text-[#1A44C2] transition">
+
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '7px' }}>
+                <label style={{ fontSize: '13px', fontWeight: 700, color: '#111' }}>Пароль</label>
+                <Link href="/auth/reset-password" style={{ fontSize: '12px', fontWeight: 600, color: '#2563EB', textDecoration: 'none' }}>
                   Забыл пароль?
                 </Link>
               </div>
               <input type="password" value={password} onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••" required
-                className="w-full border border-[#E2E0D8] bg-[#F7F6F2] rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#EEF3FF] focus:bg-white transition"/>
+                style={{ width: '100%', fontFamily: 'Inter,sans-serif', fontSize: '14px', padding: '11px 14px', border: '1.5px solid #E2E0D8', borderRadius: '14px', background: '#F7F6F2', color: '#111', outline: 'none', boxSizing: 'border-box' }} />
             </div>
+
             <button type="submit" disabled={loading}
-              className="w-full bg-[#2563EB] text-white font-bold py-3.5 rounded-2xl text-sm hover:bg-[#1A44C2] transition-all shadow-md shadow-blue-200 disabled:opacity-60 disabled:cursor-not-allowed mt-2">
+              style={{ width: '100%', fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 700, padding: '13px', border: 'none', borderRadius: '14px', background: loading ? '#93C5FD' : '#2563EB', color: '#fff', cursor: loading ? 'not-allowed' : 'pointer' }}>
               {loading ? 'Входим...' : 'Войти'}
             </button>
           </form>
         </div>
 
-        <p className="text-center text-sm text-[#999999] mt-5 font-medium">
+        <p style={{ textAlign: 'center', fontSize: '14px', color: '#999', marginTop: '20px', fontWeight: 500 }}>
           Нет аккаунта?{' '}
-          <Link href="/auth/register" className="text-[#2563EB] font-bold hover:text-[#1A44C2] transition">
+          <Link href="/auth/register" style={{ color: '#2563EB', fontWeight: 700, textDecoration: 'none' }}>
             Зарегистрироваться
           </Link>
         </p>
