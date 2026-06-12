@@ -19,14 +19,3 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   if (!classroom) return NextResponse.json({ error: 'Класс не найден' }, { status: 404 })
   return NextResponse.json(classroom)
 }
-
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
-  const { error, user } = await requireTeacher()
-  if (error) return error
-
-  const classroom = await prisma.classroom.findFirst({ where: { id: params.id, teacherId: user!.id } })
-  if (!classroom) return NextResponse.json({ error: 'Класс не найден' }, { status: 404 })
-
-  await prisma.classroom.delete({ where: { id: params.id } })
-  return NextResponse.json({ ok: true })
-}
