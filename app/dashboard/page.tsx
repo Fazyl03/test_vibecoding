@@ -119,7 +119,7 @@ function TeacherDashboard({ user, quizCount, classroomCount, videoCount }: { use
 
         <div className="action-grid">
           <DashCard title="Мои квизы" icon="📝" empty="Вы ещё не создали квизы" action={{ label: 'Создать квиз', href: '/teacher/quizzes/create' }} />
-          <DashCard title="Мои классы" icon="🏫" empty="Вы ещё не создали классы" action={{ label: 'Создать класс', href: '/teacher/classrooms/create' }} />
+          <DashCard title="Мои классы" icon="🏫" empty="Вы ещё не создали классы" action={{ label: 'Открыть классы', href: '/teacher/classrooms' }} />
         </div>
       </main>
     </div>
