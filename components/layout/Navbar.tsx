@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { useState } from 'react'
 
 const navLinks = [
@@ -96,6 +96,12 @@ export default function Navbar() {
                   </div>
                   <span style={{ fontSize: '13px', fontWeight: 600, color: '#475569' }}>Кабинет</span>
                 </Link>
+
+                {/* Logout */}
+                <button onClick={() => signOut({ callbackUrl: '/' })}
+                  style={{ fontFamily: 'Inter,sans-serif', fontSize: '13px', fontWeight: 600, padding: '7px 14px', border: '1.5px solid #E2E8F0', borderRadius: '9px', background: '#fff', color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <span>↩</span> Выйти
+                </button>
               </>
             ) : (
               <Link href="/auth/login" style={{ fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 600, padding: '8px 18px', border: 'none', borderRadius: '8px', background: '#2563EB', color: '#fff', textDecoration: 'none' }}>
@@ -129,10 +135,16 @@ export default function Navbar() {
                 </button>
               )}
               {isLoggedIn ? (
-                <Link href="/dashboard" onClick={() => setOpen(false)}
-                  style={{ fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 700, padding: '11px', border: '1.5px solid #2563EB', borderRadius: '10px', color: '#2563EB', textDecoration: 'none', textAlign: 'center', display: 'block' }}>
-                  Мой кабинет
-                </Link>
+                <>
+                  <Link href="/dashboard" onClick={() => setOpen(false)}
+                    style={{ fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 700, padding: '11px', border: '1.5px solid #2563EB', borderRadius: '10px', color: '#2563EB', textDecoration: 'none', textAlign: 'center', display: 'block' }}>
+                    Мой кабинет
+                  </Link>
+                  <button onClick={() => signOut({ callbackUrl: '/' })}
+                    style={{ width: '100%', fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 600, padding: '11px', border: '1.5px solid #E2E8F0', borderRadius: '10px', background: '#fff', color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                    ↩ Выйти из аккаунта
+                  </button>
+                </>
               ) : (
                 <Link href="/auth/login" onClick={() => setOpen(false)}
                   style={{ fontFamily: 'Inter,sans-serif', fontSize: '14px', fontWeight: 700, padding: '11px', border: 'none', borderRadius: '10px', background: '#2563EB', color: '#fff', textDecoration: 'none', textAlign: 'center', display: 'block' }}>
