@@ -5,7 +5,7 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const quiz = await prisma.quiz.findUnique({
+  const quiz = await prisma.quiz.findFirst({
     where: { id: params.id, isPublished: true },
     select: {
       id: true,
