@@ -33,7 +33,7 @@ export default async function DashboardPage() {
   }
 
   // STUDENT
-  const [attemptCount, classCount, recentAttempts] = await Promise.all([
+  const [attemptCount, classCount, recentAttempts, purchases] = await Promise.all([
     prisma.quizAttempt.count({ where: { studentId: user.id } }),
     prisma.classMember.count({ where: { studentId: user.id } }),
     prisma.quizAttempt.findMany({
@@ -42,16 +42,26 @@ export default async function DashboardPage() {
       orderBy: { startedAt: 'desc' },
       take: 5,
     }),
+    prisma.purchase.findMany({
+      where: { studentId: user.id, status: 'COMPLETED' },
+      include: {
+        product: { select: { id: true, name: true, type: true } },
+        course:  { select: { id: true, title: true, type: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+    }),
   ])
-  return <StudentDashboard user={user} attemptCount={attemptCount} classCount={classCount} recentAttempts={recentAttempts} />
+  return <StudentDashboard user={user} attemptCount={attemptCount} classCount={classCount} recentAttempts={recentAttempts} purchases={purchases} />
 }
 
 // ─── STUDENT ─────────────────────────────────────────────────
-function StudentDashboard({ user, attemptCount, classCount, recentAttempts }: {
+function StudentDashboard({ user, attemptCount, classCount, recentAttempts, purchases }: {
   user: { name: string; username: string }
   attemptCount: number
   classCount: number
   recentAttempts: any[]
+  purchases: any[]
 }) {
   return (
     <div style={{ minHeight: '100vh', background: '#F8FAFC', fontFamily: 'Inter,sans-serif' }}>
@@ -133,6 +143,37 @@ function StudentDashboard({ user, attemptCount, classCount, recentAttempts }: {
               </Link>
             </div>
           </div>
+        </div>
+
+        {/* Purchases */}
+        <div style={{ background: '#fff', borderRadius: '16px', border: '1px solid #E2E0D8', overflow: 'hidden', marginTop: '16px' }}>
+          <div style={{ padding: '16px 20px', borderBottom: '1px solid #F1F5F9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A' }}>🛍️ Мои курсы и покупки</span>
+            <Link href="/courses" style={{ fontSize: '13px', fontWeight: 600, color: '#2563EB', textDecoration: 'none' }}>Все курсы →</Link>
+          </div>
+          {purchases.length === 0 ? (
+            <div style={{ padding: '32px 20px', textAlign: 'center' }}>
+              <p style={{ fontSize: '14px', color: '#94A3B8', marginBottom: '14px' }}>Вы пока ничего не приобрели</p>
+              <Link href="/courses" style={{ fontFamily: 'Inter,sans-serif', fontSize: '13px', fontWeight: 700, padding: '9px 18px', border: '1.5px solid #2563EB', borderRadius: '10px', color: '#2563EB', textDecoration: 'none', display: 'inline-block' }}>
+                Посмотреть курсы
+              </Link>
+            </div>
+          ) : (
+            purchases.map((p, i) => {
+              const item = p.course ?? p.product
+              const title = p.course ? p.course.title : p.product?.name
+              const href  = p.course ? `/courses/${p.course.id}` : `/shop/${p.product?.id}`
+              return (
+                <div key={p.id} style={{ padding: '14px 20px', borderBottom: i < purchases.length - 1 ? '1px solid #F1F5F9' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#0F172A' }}>{title}</div>
+                    <div style={{ fontSize: '12px', color: '#64748B' }}>{p.course ? 'Курс' : 'Товар'} · {p.amount.toLocaleString()} тг</div>
+                  </div>
+                  <Link href={href} style={{ fontSize: '13px', fontWeight: 700, color: '#2563EB', textDecoration: 'none' }}>Открыть →</Link>
+                </div>
+              )
+            })
+          )}
         </div>
       </main>
     </div>
