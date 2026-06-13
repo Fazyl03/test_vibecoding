@@ -33,6 +33,7 @@ model User {
   classMemberships ClassMember[]
   quizAttempts   QuizAttempt[]
   enrollments    Enrollment[]
+  purchases      Purchase[]
 }
 
 model Session {
@@ -91,6 +92,7 @@ model Course {
   quizzes     Quiz[]
   videos      Video[]
   enrollments Enrollment[]
+  purchases   Purchase[]
 }
 
 // ─── QUIZ ────────────────────────────────────────────────────
@@ -159,10 +161,9 @@ model Product {
   isPublished Boolean     @default(false)
   createdAt   DateTime    @default(now())
 
-  teacher User @relation(fields: [teacherId], references: [id])
+  teacher   User       @relation(fields: [teacherId], references: [id])
+  purchases Purchase[]
 }
-
-// ─── CLASSROOM ───────────────────────────────────────────────
 
 model Classroom {
   id        String   @id @default(cuid())
@@ -239,6 +240,25 @@ model Enrollment {
   @@unique([courseId, studentId])
 }
 
+// ─── PURCHASE ────────────────────────────────────────────────
+
+model Purchase {
+  id        String         @id @default(cuid())
+  studentId String
+  productId String?
+  courseId  String?
+  amount    Int
+  status    PurchaseStatus @default(COMPLETED)
+  createdAt DateTime       @default(now())
+
+  student User     @relation(fields: [studentId], references: [id])
+  product Product? @relation(fields: [productId], references: [id])
+  course  Course?  @relation(fields: [courseId], references: [id])
+
+  @@unique([studentId, productId])
+  @@unique([studentId, courseId])
+}
+
 // ─── ENUMS ───────────────────────────────────────────────────
 
 enum Role {
@@ -280,4 +300,10 @@ enum ProductType {
   CHEATSHEET_DIGITAL
   CHEATSHEET_PHYSICAL
   OTHER
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  FAILED
 }
