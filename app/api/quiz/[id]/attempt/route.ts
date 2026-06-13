@@ -25,7 +25,7 @@ export async function POST(
   })
   if (!user) return NextResponse.json({ error: 'Пользователь не найден' }, { status: 401 })
 
-  const quiz = await prisma.quiz.findUnique({
+  const quiz = await prisma.quiz.findFirst({
     where: { id: params.id, isPublished: true },
     include: { questions: { select: { id: true, correctOption: true } } },
   })
