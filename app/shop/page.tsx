@@ -38,21 +38,23 @@ export default async function ShopPage() {
         ) : (
           <div className="shop-grid">
             {products.map(p => (
-              <div key={p.id} style={{ background: '#fff', borderRadius: '20px', padding: '20px', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column' }}>
-                <div style={{ fontSize: '40px', marginBottom: '14px' }}>{typeEmoji[p.type] ?? '📦'}</div>
-                <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: '#94A3B8', marginBottom: '5px' }}>{typeLabel[p.type]}</div>
-                <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', lineHeight: 1.35, marginBottom: '14px', flex: 1 }}>{p.name}</h3>
-                <div style={{ height: '1px', background: '#F1F5F9', marginBottom: '14px' }} />
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
-                    <span style={{ fontSize: '19px', fontWeight: 800, color: '#0F172A' }}>{p.price.toLocaleString()} </span>
-                    <span style={{ fontSize: '13px', color: '#94A3B8' }}>тг</span>
+              <Link key={p.id} href={`/shop/${p.id}`} style={{ textDecoration: 'none' }}>
+                <div style={{ background: '#fff', borderRadius: '20px', padding: '20px', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <div style={{ fontSize: '40px', marginBottom: '14px' }}>{typeEmoji[p.type] ?? '📦'}</div>
+                  <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: '#94A3B8', marginBottom: '5px' }}>{typeLabel[p.type]}</div>
+                  <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', lineHeight: 1.35, marginBottom: '14px', flex: 1 }}>{p.name}</h3>
+                  <div style={{ height: '1px', background: '#F1F5F9', marginBottom: '14px' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <span style={{ fontSize: '19px', fontWeight: 800, color: '#0F172A' }}>{p.price.toLocaleString()} </span>
+                      <span style={{ fontSize: '13px', color: '#94A3B8' }}>тг</span>
+                    </div>
+                    <span style={{ fontFamily: 'Inter,sans-serif', fontSize: '13px', fontWeight: 700, padding: '9px 16px', border: 'none', borderRadius: '10px', background: '#2563EB', color: '#fff' }}>
+                      Подробнее
+                    </span>
                   </div>
-                  <Link href="/auth/login" style={{ fontFamily: 'Inter,sans-serif', fontSize: '13px', fontWeight: 700, padding: '9px 16px', border: 'none', borderRadius: '10px', background: '#2563EB', color: '#fff', textDecoration: 'none' }}>
-                    Купить
-                  </Link>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
